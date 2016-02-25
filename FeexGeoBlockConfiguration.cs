@@ -21,7 +21,7 @@ namespace Freenex.FeexGeoBlock
     public class FeexGeoBlockConfiguration : IRocketPluginConfiguration
     {
         public string RejectionReason;
-        public bool KickOnNoCountry;
+        public bool KickNoCountry;
         public bool Logging;
 
         [XmlArrayItem("WhitelistCountryCode")]
@@ -31,7 +31,7 @@ namespace Freenex.FeexGeoBlock
         public void LoadDefaults()
         {
             RejectionReason = "WHITELISTED";
-            KickOnNoCountry = true;
+            KickNoCountry = true;
             Logging = true;
 
             Whitelist = new Whitelist[]{

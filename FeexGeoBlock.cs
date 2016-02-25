@@ -34,7 +34,7 @@ namespace Freenex.FeexGeoBlock
             
             if (playerCountry.getCode() == "--")
             {
-                if (Configuration.Instance.KickOnNoCountry)
+                if (Configuration.Instance.KickNoCountry)
                 {
                     if (Configuration.Instance.Logging) { Logger.LogWarning("Access denied: " + player + " // Reason: No country."); }
                     rejectionReason = GetSteamRejection();
