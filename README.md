@@ -1,2 +1,2 @@
 # FeexGeoBlock
-Geo IP Whitelisting.
+Geo IP Whitelist/Blacklist.
