@@ -16,6 +16,12 @@ namespace Freenex.FeexGeoBlock
             Instance = this;
             UnturnedPermissions.OnJoinRequested += UnturnedPermissions_OnJoinRequested;
             Logger.Log("Freenex's FeexGeoBlock has been loaded!");
+
+            if (!System.IO.File.Exists(".\\Libraries\\GeoIP.dat"))
+            {
+                Logger.LogError("FeexGeoBlock >> Could not find file \"" + System.IO.Path.GetFullPath(".\\Libraries\\GeoIP.dat") + "\".");
+                ForceUnload();
+            }
         }
 
         protected override void Unload()
@@ -31,37 +37,23 @@ namespace Freenex.FeexGeoBlock
 
             LookupService playerLookup = new LookupService(".\\Libraries\\GeoIP.dat", LookupService.GEOIP_MEMORY_CACHE);
             Country playerCountry = playerLookup.getCountry(Parser.getIPFromUInt32(sessionStateP2P.m_nRemoteIP));
-            
-            if (playerCountry.getCode() == "--")
-            {
-                if (Configuration.Instance.KickNoCountry)
-                {
-                    if (Configuration.Instance.Logging) { Logger.LogWarning("Access denied: " + player + " // Reason: No country."); }
-                    rejectionReason = GetSteamRejection();
-                }
-                else
-                {
-                    if (Configuration.Instance.Logging) { Logger.LogWarning("Access granted: " + player + " // Reason: No country."); }
-                }
-            }
-            else
-            {
-                bool grantAccess = false;
-                for (int i = 0; i < Configuration.Instance.Whitelist.Length; i++)
-                {
-                    if (Configuration.Instance.Whitelist[i].WhitelistCountry == playerCountry.getCode())
-                    {
-                        grantAccess = true;
-                    }
-                }
 
-                if (!grantAccess)
-                {
-                    if (Configuration.Instance.Logging) { Logger.LogWarning("Access denied: " + player + " // Reason: Wrong country (" + playerCountry.getCode() + ")."); }
-                    rejectionReason = GetSteamRejection();
-                }
+            bool grantAccess = false;
+
+            if (Configuration.Instance.EnableWhitelist)
+            {
+                if (Configuration.Instance.Whitelist.Contains(playerCountry.getCode())) { grantAccess = true; }
+            }
+            if (Configuration.Instance.EnableBlacklist)
+            {
+                if (!Configuration.Instance.Blacklist.Contains(playerCountry.getCode())) { grantAccess = true; }
             }
 
+            if (!grantAccess)
+            {
+                if (Configuration.Instance.Logging) { Logger.LogWarning("Access denied: " + player + " // Country: " + playerCountry.getCode()); }
+                rejectionReason = GetSteamRejection();
+            }
         }
 
         public ESteamRejection GetSteamRejection()

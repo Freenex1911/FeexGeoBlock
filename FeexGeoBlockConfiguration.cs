@@ -1,4 +1,5 @@
 ﻿using Rocket.API;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Freenex.FeexGeoBlock
@@ -21,22 +22,22 @@ namespace Freenex.FeexGeoBlock
     public class FeexGeoBlockConfiguration : IRocketPluginConfiguration
     {
         public string RejectionReason;
-        public bool KickNoCountry;
         public bool Logging;
-
-        [XmlArrayItem("WhitelistCountryCode")]
-        [XmlArray(ElementName = "Whitelist")]
-        public Whitelist[] Whitelist;
+        public bool EnableWhitelist;
+        public bool EnableBlacklist;
+        [XmlArrayItem(ElementName = "CountryCode")]
+        public List<string> Whitelist;
+        [XmlArrayItem(ElementName = "CountryCode")]
+        public List<string> Blacklist;
 
         public void LoadDefaults()
         {
             RejectionReason = "WHITELISTED";
-            KickNoCountry = true;
             Logging = true;
-
-            Whitelist = new Whitelist[]{
-                new Whitelist("DE")
-            };
+            EnableWhitelist = true;
+            EnableBlacklist = false;
+            Whitelist = new List<string>(new string[] { "DE" });
+            Blacklist = new List<string>(new string[] { "--" });
         }
     }
 }
