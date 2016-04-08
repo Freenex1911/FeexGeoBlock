@@ -20,7 +20,7 @@ namespace Freenex.FeexGeoBlock
             if (!System.IO.File.Exists(Configuration.Instance.DatabasePath))
             {
                 Logger.LogError("FeexGeoBlock >> Could not find file \"" + System.IO.Path.GetFullPath(Configuration.Instance.DatabasePath) + "\".");
-                ForceUnload();
+                UnloadPlugin();
             }
         }
 
