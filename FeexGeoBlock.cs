@@ -41,7 +41,7 @@ namespace Freenex.FeexGeoBlock
             P2PSessionState_t sessionStateP2P;
             SteamGameServerNetworking.GetP2PSessionState(player, out sessionStateP2P);
 
-            LookupService playerLookup = new LookupService(Configuration.Instance.DatabasePath, LookupService.GEOIP_MEMORY_CACHE);
+            LookupService playerLookup = new LookupService(System.IO.Path.GetFullPath(Configuration.Instance.DatabasePath), LookupService.GEOIP_MEMORY_CACHE);
             Country playerCountry = playerLookup.getCountry(Parser.getIPFromUInt32(sessionStateP2P.m_nRemoteIP));
 
             bool grantAccess = false;
